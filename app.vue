@@ -1,12 +1,5 @@
 <template>
-  <!-- TODO: make design responsive; currently styles are fixed -->
-  <Hero />
-  <OurStory />
-  <Venue />
-  <Schedule />
-  <slot />
-  <RSVP />
-  <Footer />
+  <NuxtPage />
 </template>
 
 <style>
