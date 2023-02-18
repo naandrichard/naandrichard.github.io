@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import { createWidget } from '@typeform/embed'
 import '@typeform/embed/build/css/widget.css'
-
-const btnTestNew = ref(null);
 
 // unmount hooks
 const unmountFindInvitationForm = ref(() => { });
@@ -175,6 +174,16 @@ function mountUpdateRsvpForm() {
 const api = axios.create({
     baseURL: "https://rsvp-rcqzf.ondigitalocean.app/api/rsvp/"
 });
+axiosRetry(api, {
+    retries: 3,
+    retryDelay: (retryCount) => {
+        console.log("Retry attempt:", retryCount);
+        return retryCount * 500
+    },
+    retryCondition: (error) => {
+        return error.response.status >= 500;
+    }
+})
 
 function findYourInvitation(data) {
     const responseId = data.responseId;
