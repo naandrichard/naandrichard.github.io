@@ -187,6 +187,7 @@ function findYourInvitation(data) {
             hiddenFirstName.value = data.firstName;
             hiddenLastName.value = data.lastName;
             hiddenEmail.value = data.email;
+            console.log(data);
 
             if (response.data.timestamp) {
                 // a previous RSVP exists, write hidden field values and show update RSVP form
@@ -212,6 +213,7 @@ function findYourInvitation(data) {
         .catch(function (error) {
             if (error.response) {
                 const status = error.response.status;
+                console.log(error.response);
                 if (status == 404) {
                     // TODO: not in invitation list, show modal saying "if this is a mistake, please contact Na or Richard."
                 }
