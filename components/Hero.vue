@@ -125,7 +125,7 @@ function handleScrollEvent(intersectionState) {
     <div class="">
         <div ref="topNav"
             class="fixed top-0 left-0 h-18 w-full bg-white px-20 box-border text-right font-serif italic text-3xl z-40 leading-loose transition-all duration-1000 -translate-y-full opacity-0 select-none">
-            <a class="transition-all hover:text-orange-200 mx-16" href="#">registry</a>
+            <NuxtLink class="transition-all hover:text-orange-200 mx-16" to="/registry">registry</NuxtLink>
             <NuxtLink class="transition-all hover:text-orange-200" to="/rsvp">r.s.v.p.</NuxtLink>
         </div>
         <div ref="sideNav" class="fixed top-0 left-0 h-screen w-20 text-center vertical-text select-none transition-all duration-1000

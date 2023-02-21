@@ -14,4 +14,11 @@ export default defineNuxtConfig({
         },
     },
     ssr: false,
+
+    // Disabling transitions is required for onMounted() to work properly and be called after the page is rendered.
+    // See https://github.com/nuxt/nuxt/issues/13471
+    app: {
+        pageTransition: false,
+        layoutTransition: false,
+    },
 });
