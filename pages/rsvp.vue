@@ -4,6 +4,9 @@ import axiosRetry from "axios-retry";
 import { createWidget } from '@typeform/embed'
 import '@typeform/embed/build/css/widget.css'
 
+const errorModal = ref(null);
+const inviteNotFoundModal = ref(null);
+
 // unmount hooks
 const unmountFindInvitationForm = ref(() => { });
 const unmountInitialRsvpForm = ref(() => { });
@@ -22,6 +25,20 @@ const hiddenPlusOneLastName = ref("");
 const hiddenPlusOneHasDietaryRestrictions = ref(false);
 const hiddenPlusOneWhatDietaryRestrictions = ref("");
 const hiddenRegards = ref("");
+
+// utility functions
+
+function showError() {
+    const classes = new Set(errorModal.value.className.split(' '));
+    classes.delete('opacity-0');
+    errorModal.value.className = [...classes].join(' ');
+}
+
+function showInviteNotFound() {
+    const classes = new Set(inviteNotFoundModal.value.className.split(' '));
+    classes.delete('opacity-0');
+    inviteNotFoundModal.value.className = [...classes].join(' ');
+}
 
 /* ---------- TYPEFORM MOUNTING FUNCTIONS -------------------------------------------------------------------------- */
 
@@ -50,7 +67,7 @@ function mountFindInvitationForm() {
 
 function mountInitialRsvpForm() {
     if (!(hiddenFirstName.value && hiddenLastName.value && hiddenEmail.value)) {
-        // TODO show error message
+        showError();
         return;
     }
     const { refresh, unmount } = createWidget(initialRsvpForm.formId, {
@@ -122,7 +139,7 @@ function createRsvpSummary() {
 
 function mountUpdateRsvpForm() {
     if (!hiddenIsAttending) {
-        // TODO show error message
+        showError();
         return;
     }
 
@@ -224,10 +241,10 @@ function findYourInvitation(data) {
                 const status = error.response.status;
                 console.log(error.response);
                 if (status == 404) {
-                    // TODO: not in invitation list, show modal saying "if this is a mistake, please contact Na or Richard."
+                    showInviteNotFound();
                 }
                 else {
-                    // TODO: show "Oops! Something went wrong. Try again later or let Na or Richard know if it's still a problem."
+                    showError();
                 }
             }
             else {
@@ -242,7 +259,7 @@ function submitInitialRsvp(data) {
 
     api.post(responseId)
         .catch(function (error) {
-            // TODO: show "Oops! Something went wrong. Try again later or let Na or Richard know if it's still a problem."
+            showError();
             if (error.response) {
                 console.log(error.response);
             }
@@ -257,7 +274,7 @@ function submitUpdateRsvp(data) {
 
     api.put(responseId)
         .catch(function (error) {
-            // TODO: show "Oops! Something went wrong. Try again later or let Na or Richard know if it's still a problem."
+            showError();
             if (error.response) {
                 console.log(error.response);
             }
@@ -277,14 +294,46 @@ onMounted(() => {
 
 <template>
     <div>
+        <div
+            class="fixed top-0 left-0 h-18 w-full bg-white px-20 box-border text-right font-serif italic text-3xl z-top leading-loose select-none">
+            <NuxtLink
+                class="font-serif leading-[4.5rem] text-5xl text-black font-medium select-none inline-block absolute left-0 ml-20 not-italic"
+                to="/">
+                Na & Richard</NuxtLink>
+            <NuxtLink class="transition-all hover:text-orange-200 mx-16" to="/registry">registry</NuxtLink>
+            <NuxtLink class="transition-all hover:text-orange-200" to="/rsvp">r.s.v.p.</NuxtLink>
+        </div>
+
         <div id="find-your-invitation"></div>
         <div id="initial-rsvp"></div>
         <div id="update-rsvp"></div>
+
+        <div ref="errorModal"
+            class="w-screen h-screen fixed top-0 left-0 z-error text-center bg-white grid grid-cols-1 content-center px-40 justify-items-center opacity-0 transition-all duration-500">
+            <div>
+                <h1 class="font-serif font-medium text-4xl leading-loose italic">Oops, something went wrong.</h1>
+                <span>We're really sorry about that. 😞 Please refresh the page and try again, or if you keep seeing this
+                    please reach out to Na or Richard!</span>
+            </div>
+        </div>
+        <div ref="inviteNotFoundModal"
+            class="w-screen h-screen fixed top-0 left-0 z-error text-center bg-white grid grid-cols-1 content-center px-40 justify-items-center opacity-0 transition-all duration-500">
+            <div>
+                <h1 class="font-serif font-medium text-4xl leading-loose italic">Sorry, we couldn't find your invitation!
+                </h1>
+                <span>Please make sure you put your name in as it appeared on the envelope, or let Na or
+                    Richard know if you're still having problems.</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <style>
 .z-top {
+    z-index: 10101;
+}
+
+.z-error {
     z-index: 10002;
 }
 </style>
