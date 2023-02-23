@@ -14,10 +14,19 @@ export default defineNuxtConfig({
         },
     },
     ssr: false,
-
-    // Disabling transitions is required for onMounted() to work properly and be called after the page is rendered.
-    // See https://github.com/nuxt/nuxt/issues/13471
     app: {
+        head: {
+            title: "Na & Richard 💍 2023",
+            link: [
+                {
+                    rel: "icon",
+                    type: "image/png",
+                    href: "/favicon.png",
+                },
+            ],
+        },
+        // Disabling transitions is required for onMounted() to work properly and be called after the page is rendered.
+        // See https://github.com/nuxt/nuxt/issues/13471
         pageTransition: false,
         layoutTransition: false,
     },
