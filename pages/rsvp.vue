@@ -30,12 +30,14 @@ const hiddenRegards = ref("");
 
 function showError() {
     const classes = new Set(errorModal.value.className.split(' '));
+    classes.delete('translate-x-full');
     classes.delete('opacity-0');
     errorModal.value.className = [...classes].join(' ');
 }
 
 function showInviteNotFound() {
     const classes = new Set(inviteNotFoundModal.value.className.split(' '));
+    classes.delete('translate-x-full');
     classes.delete('opacity-0');
     inviteNotFoundModal.value.className = [...classes].join(' ');
 }
@@ -296,12 +298,12 @@ onMounted(() => {
     <div>
         <Navigation />
 
-        <div id="find-your-invitation"></div>
-        <div id="initial-rsvp"></div>
-        <div id="update-rsvp"></div>
+        <div id="find-your-invitation" class="mt-18"></div>
+        <div id="initial-rsvp" class="mt-18"></div>
+        <div id="update-rsvp" class="mt-18"></div>
 
         <div ref="errorModal"
-            class="w-screen h-screen fixed top-0 left-0 z-error text-center bg-white grid grid-cols-1 content-center px-40 justify-items-center opacity-0 transition-all duration-500">
+            class="w-screen h-screen fixed top-0 left-0 z-error text-center bg-white grid grid-cols-1 content-center px-40 justify-items-center opacity-0 transition-opacity duration-500 translate-x-full">
             <div>
                 <h1 class="font-serif font-medium text-4xl leading-loose italic">Oops, something went wrong.</h1>
                 <span>We're really sorry about that. 😞 Please refresh the page and try again, or if you keep seeing this
@@ -309,7 +311,7 @@ onMounted(() => {
             </div>
         </div>
         <div ref="inviteNotFoundModal"
-            class="w-screen h-screen fixed top-0 left-0 z-error text-center bg-white grid grid-cols-1 content-center px-40 justify-items-center opacity-0 transition-all duration-500">
+            class="w-screen h-screen fixed top-0 left-0 z-error text-center bg-white grid grid-cols-1 content-center px-40 justify-items-center opacity-0 transition-opacity duration-500 translate-x-full">
             <div>
                 <h1 class="font-serif font-medium text-4xl leading-loose italic">Sorry, we couldn't find your invitation!
                 </h1>
