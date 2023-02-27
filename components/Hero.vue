@@ -1,13 +1,17 @@
-<script setup>
+<script setup lang="ts">
+import { Ref } from 'vue';
 import IntersectionObserver from './IntersectionObserver.vue';
 
-const hero = ref(null);
-const logotypeContainer = ref(null);
-const logotype = ref(null);
-const topNav = ref(null);
-const sideNav = ref(null);
+const hero = ref(null) as unknown as Ref<HTMLElement>;
+const logotypeContainer = ref(null) as unknown as Ref<HTMLElement>;
+const logotype = ref(null) as unknown as Ref<HTMLElement>;
+const topNav = ref(null) as unknown as Ref<HTMLElement>;
+const sideNav = ref(null) as unknown as Ref<HTMLElement>;
 
-function toggleHeroFull(isFull /* Boolean */) {
+const menuIcon = ref(null) as unknown as Ref<HTMLElement>;
+const menuLinks = ref(null) as unknown as Ref<HTMLElement>;
+
+function toggleHeroFull(isFull: boolean) {
     if (hero == null) {
         return;
     }
@@ -27,37 +31,54 @@ function toggleHeroFull(isFull /* Boolean */) {
     hero.value.className = newClasses;
 }
 
-function toggleLogotypeFull(isFull /* Boolean */) {
+function toggleLogotypeFull(isFull: boolean) {
     if (logotype == null || logotypeContainer == null) {
         return;
     }
+
+    // classes to add when hero is full
+    const fullLogotypeClasses = new Set([
+        "text-white",
+        "text-10rem",
+        "leading-normal",
+        "-translate-x-1/2",
+    ]);
+    const fullLogotypeContainerClasses = new Set([
+        "w-full",
+        "my-40",
+        "translate-x-1/2",
+    ]);
+
+    // classes to add when hero is not full
+    const normalLogotypeClasses = new Set([
+        "text-black",
+        "text-4xl",
+        "lg:text-5xl",
+        "leading-[4.5rem]",
+    ])
+    const normalLogotypeContainerClasses = new Set([
+        "ml-4",
+        "lg:ml-20",
+        "w-auto",
+        "lg:w-1/2",
+    ])
 
     const logotypeClasses = new Set(logotype.value.className.split(' '));
     const logotypeContainerClasses = new Set(logotypeContainer.value.className.split(' '));
 
     if (isFull) {
-        logotypeClasses.add('-translate-x-1/2');
-        logotypeClasses.add('text-white');
-        logotypeClasses.delete('text-black');
-        logotypeClasses.delete('text-5xl');
-        logotypeClasses.add('text-10rem');
-        logotypeContainerClasses.add('translate-x-1/2');
-        logotypeContainerClasses.add('my-40');
-        logotypeContainerClasses.delete('px-20');
-        logotypeContainerClasses.delete('w-1/2');
-        logotypeContainerClasses.add('w-full');
+        fullLogotypeClasses.forEach(c => logotypeClasses.add(c));
+        fullLogotypeContainerClasses.forEach(c => logotypeContainerClasses.add(c));
+
+        normalLogotypeClasses.forEach(c => logotypeClasses.delete(c));
+        normalLogotypeContainerClasses.forEach(c => logotypeContainerClasses.delete(c));
     }
     else {
-        logotypeClasses.delete('-translate-x-1/2');
-        logotypeClasses.delete('text-white');
-        logotypeClasses.add('text-black');
-        logotypeClasses.add('text-5xl');
-        logotypeClasses.delete('text-10rem');
-        logotypeContainerClasses.delete('translate-x-1/2');
-        logotypeContainerClasses.delete('my-40');
-        logotypeContainerClasses.add('px-20');
-        logotypeContainerClasses.add('w-1/2');
-        logotypeContainerClasses.delete('w-full');
+        fullLogotypeClasses.forEach(c => logotypeClasses.delete(c));
+        fullLogotypeContainerClasses.forEach(c => logotypeContainerClasses.delete(c));
+
+        normalLogotypeClasses.forEach(c => logotypeClasses.add(c));
+        normalLogotypeContainerClasses.forEach(c => logotypeContainerClasses.add(c));
     }
 
     console.log(logotypeClasses)
@@ -69,7 +90,7 @@ function toggleLogotypeFull(isFull /* Boolean */) {
     logotypeContainer.value.className = newLogotypeContainerClasses;
 }
 
-function toggleNavVisibility(isVisible /* Boolean */) {
+function toggleNavVisibility(isVisible: boolean) {
     if (topNav == null || sideNav == null) {
         return;
     }
@@ -103,7 +124,7 @@ function toggleNavVisibility(isVisible /* Boolean */) {
     console.log(sideNav.value.className);
 }
 
-function handleScrollEvent(intersectionState) {
+function handleScrollEvent(intersectionState: any) {
     const hasScrolled = intersectionState.inViewport;
     const atTop = intersectionState.isBelow;
     console.log(`handleScrollEvent() called with inViewport: ${hasScrolled} and isBelow: ${atTop}`);
@@ -117,7 +138,39 @@ function handleScrollEvent(intersectionState) {
         toggleLogotypeFull(true);
         toggleNavVisibility(false);
     }
+}
 
+function toggleMenuIcon() {
+    const openClassName = "open"
+    const classes = new Set(menuIcon.value.className.split(" "));
+    if (classes.has(openClassName)) {
+        classes.delete(openClassName);
+    }
+    else {
+        classes.add(openClassName);
+    }
+
+    menuIcon.value.className = [...classes].join(' ');
+}
+
+function toggleNavOverlay() {
+    const showClassName = "show"
+    const classes = new Set(menuLinks.value.className.split(" "));
+    if (classes.has(showClassName)) {
+        classes.delete(showClassName);
+        classes.add("-translate-y-full");
+    }
+    else {
+        classes.add(showClassName);
+        classes.delete("-translate-y-full");
+    }
+
+    menuLinks.value.className = [...classes].join(' ');
+}
+
+function toggleMenu(event: MouseEvent) {
+    toggleMenuIcon();
+    toggleNavOverlay();
 }
 </script>
 
@@ -125,14 +178,43 @@ function handleScrollEvent(intersectionState) {
     <div class="">
         <div ref="topNav"
             class="fixed top-0 left-0 h-18 w-full bg-white px-20 box-border text-right font-serif italic text-3xl z-40 leading-loose transition-all duration-1000 -translate-y-full opacity-0 select-none">
-            <NuxtLink class="transition-all hover:text-orange-200 mx-16" to="/registry">registry</NuxtLink>
-            <NuxtLink class="transition-all hover:text-orange-200" to="/rsvp">r.s.v.p.</NuxtLink>
+            <div class="hidden lg:block">
+                <NuxtLink class="transition-all hover:text-orange-200 mx-16" to="/registry">registry</NuxtLink>
+                <NuxtLink class="transition-all hover:text-orange-200" to="/rsvp">r.s.v.p.</NuxtLink>
+            </div>
+
+            <div ref="menuIcon" id="menu-icon" @click="toggleMenu"
+                class="absolute top-1/2 right-4 -translate-y-1/2 lg:hidden">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-        <div ref="sideNav" class="fixed top-0 left-0 h-screen w-20 text-center vertical-text select-none transition-all duration-1000
-            text-2xl leading-[5rem] -translate-x-full opacity-0">
-            <a href="#our_story" class="inline-block rotate-180 my-5">our story</a>
-            <a href="#venue" class="inline-block rotate-180 my-5">venue</a>
-            <a href="#schedule" class="inline-block rotate-180 my-5">schedule</a>
+
+        <div ref="menuLinks"
+            class="fixed top-0 left-0 w-full h-full bg-white/[.95] lg:bg-transparent lg:hidden text-center grid grid-cols-1 content-center justify-items-center z-30 gap-4 font-serif italic text-5xl leading-loose select-none opacity-0 duration-500 transition-all -translate-y-full">
+            <NuxtLink class="transition-all hover:text-orange-200 md:mx-16" to="/registry">registry</NuxtLink>
+            <NuxtLink class="transition-all hover:text-orange-200" to="/rsvp">r.s.v.p.</NuxtLink>
+            <div class="w-full px-32 font-sans text-xl text-slate-400">
+                <hr class="w-full h-px mt-4 mb-4">
+                on this page
+            </div>
+            <a href="#our_story" @click="toggleMenu"
+                class="inline-block transition-color hover:text-orange-200 font-sans text-3xl not-italic">our
+                story</a>
+            <a href="#venue" @click="toggleMenu"
+                class="inline-block transition-color hover:text-orange-200 font-sans text-3xl not-italic">venue</a>
+            <a href="#schedule" @click="toggleMenu"
+                class="inline-block transition-color hover:text-orange-200 font-sans text-3xl not-italic">schedule</a>
+        </div>
+
+        <div ref="sideNav"
+            class="fixed top-0 left-0 h-screen w-20 text-center vertical-text select-none transition-all duration-1000 text-2xl leading-[5rem] -translate-x-full opacity-0 hidden lg:block">
+            <a href="#our_story" class="inline-block rotate-180 my-5 transition-color hover:text-orange-200">our
+                story</a>
+            <a href="#venue" class="inline-block rotate-180 my-5 transition-color hover:text-orange-200">venue</a>
+            <a href="#schedule" class="inline-block rotate-180 my-5 transition-color hover:text-orange-200">schedule</a>
         </div>
         <div ref="logotypeContainer"
             class="fixed top-0 left-0 translate-x-1/2 my-40 w-full transition-all duration-500 ease-linear z-50">
@@ -141,13 +223,7 @@ function handleScrollEvent(intersectionState) {
                 Na & Richard
             </span>
         </div>
-        <div ref="hero" class="h-screen m-0 transition-all duration-1000 hero-bg mb-20">
-            <!-- <div ref="hero_text"
-                class="font-serif text-10rem text-center text-white font-medium py-40 transition-opacity">
-                Na & Richard
-            </div> -->
-            <!-- <img class="h-full" src="~/assets/images/hero.jpg" /> -->
-        </div>
+        <div ref="hero" class="h-screen m-0 transition-all duration-1000 hero-bg mb-20"></div>
     </div>
     <div class="mt-px absolute top-full">
         <IntersectionObserver sentinel-name="foobar" @on-intersection="handleScrollEvent" />
@@ -179,5 +255,70 @@ function handleScrollEvent(intersectionState) {
 .vertical-text {
     writing-mode: vertical-lr;
     text-orientation: mixed;
+}
+
+#menu-icon {
+    width: 48px;
+    height: 28px;
+    cursor: pointer;
+
+    span {
+        display: block;
+        position: absolute;
+        height: 4px;
+        width: 100%;
+        background: black;
+        // border-radius: 4px;
+        opacity: 1;
+        left: 0;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: .25s ease-in-out;
+        -moz-transition: .25s ease-in-out;
+        -o-transition: .25s ease-in-out;
+        transition: .25s ease-in-out;
+
+        &:nth-child(1) {
+            top: 0px;
+        }
+
+        &:nth-child(2),
+        &:nth-child(3) {
+            top: 12px;
+        }
+
+        &:nth-child(4) {
+            top: 24px;
+        }
+    }
+
+
+    &.open span:nth-child(1) {
+        top: 12px;
+        width: 0%;
+        left: 50%;
+    }
+
+    &.open span:nth-child(2) {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    &.open span:nth-child(3) {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+    &.open span:nth-child(4) {
+        top: 12px;
+        width: 0%;
+        left: 50%;
+    }
 }
 </style>

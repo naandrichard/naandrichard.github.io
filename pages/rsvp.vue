@@ -294,15 +294,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <div
-            class="fixed top-0 left-0 h-18 w-full bg-white px-20 box-border text-right font-serif italic text-3xl z-top leading-loose select-none">
-            <NuxtLink
-                class="font-serif leading-[4.5rem] text-5xl text-black font-medium select-none inline-block absolute left-0 ml-20 not-italic"
-                to="/">
-                Na & Richard</NuxtLink>
-            <NuxtLink class="transition-all hover:text-orange-200 mx-16" to="/registry">registry</NuxtLink>
-            <NuxtLink class="transition-all hover:text-orange-200" to="/rsvp">r.s.v.p.</NuxtLink>
-        </div>
+        <Navigation />
 
         <div id="find-your-invitation"></div>
         <div id="initial-rsvp"></div>
