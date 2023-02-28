@@ -4,7 +4,7 @@
         <h2 id="schedule" class="font-serif font-medium text-5xl text-center leading-loose mb-8 scroll-mt-18">Schedule
         </h2>
 
-        <div class="grid grid-cols-2 gap-x-8 gap-y-12 mx-40">
+        <div class="grid grid-cols-2 gap-x-8 gap-y-12 mx-4 lg:mx-40">
             <div class="col-span-2 text-center">
                 <span class="text-slate-400 text-3xl">September 3, 2023</span>
             </div>
