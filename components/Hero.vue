@@ -16,15 +16,19 @@ function toggleHeroFull(isFull: boolean) {
         return;
     }
 
+    const toggleClasses = [
+        "mx-4",
+        "lg:mx-20",
+        "mt-40",
+    ];
+
     const classes = new Set(hero.value.className.split(' '));
 
     if (isFull) {
-        classes.delete('mx-20');
-        classes.delete('mt-40');
+        toggleClasses.forEach(c => classes.delete(c));
     }
     else {
-        classes.add('mx-20');
-        classes.add('mt-40');
+        toggleClasses.forEach(c => classes.add(c));
     }
 
     const newClasses = [...classes].join(' ');
@@ -39,14 +43,18 @@ function toggleLogotypeFull(isFull: boolean) {
     // classes to add when hero is full
     const fullLogotypeClasses = new Set([
         "text-white",
-        "text-10rem",
-        "leading-normal",
-        "-translate-x-1/2",
+        "text-7xl",
+        "lg:text-[10rem]",
+        "leading-[.75]",
+        "lg:leading-normal",
+        "lg:-translate-x-1/2",
     ]);
     const fullLogotypeContainerClasses = new Set([
         "w-full",
         "my-40",
-        "translate-x-1/2",
+        "lg:translate-x-1/2",
+        "pl-4",
+        "lg:p-0",
     ]);
 
     // classes to add when hero is not full
@@ -137,6 +145,11 @@ function handleScrollEvent(intersectionState: any) {
         toggleHeroFull(true);
         toggleLogotypeFull(true);
         toggleNavVisibility(false);
+
+        // closes the menu if open (mobile only)
+        if ((new Set(menuIcon.value.className.split(" "))).has("open")) {
+            toggleMenu(new MouseEvent(""));
+        }
     }
 }
 
@@ -217,15 +230,15 @@ function toggleMenu(event: MouseEvent) {
             <a href="#schedule" class="inline-block rotate-180 my-5 transition-color hover:text-orange-200">schedule</a>
         </div>
         <div ref="logotypeContainer"
-            class="fixed top-0 left-0 translate-x-1/2 my-40 w-full transition-all duration-500 ease-linear z-50">
-            <span ref="logotype"
-                class="font-serif leading-normal text-10rem text-white font-medium select-none inline-block -translate-x-1/2 transition-all duration-500 ease-linear">
+            class="fixed top-0 left-0 lg:translate-x-1/2 my-40 w-full transition-all duration-500 ease-linear z-50 pl-4 lg:p-0">
+            <span ref="logotype" id="logotype"
+                class="font-serif leading-[.75] lg:leading-normal text-7xl lg:text-[10rem] text-white font-medium select-none inline-block lg:-translate-x-1/2 transition-all duration-500 ease-linear w-full lg:w-auto break-normal">
                 Na & Richard
             </span>
         </div>
         <div ref="hero" class="h-screen m-0 transition-all duration-1000 hero-bg mb-20"></div>
     </div>
-    <div class="mt-px absolute top-full">
+    <div class="mt-px absolute top-full left-1/2">
         <IntersectionObserver sentinel-name="foobar" @on-intersection="handleScrollEvent" />
     </div>
 </template>

@@ -9,7 +9,6 @@ export default <Partial<Config>>{
             },
             fontSize: {
                 "3xl": "2rem",
-                "10rem": "10rem",
             },
             spacing: {
                 "18": "4.5rem",
