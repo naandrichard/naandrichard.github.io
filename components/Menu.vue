@@ -64,7 +64,7 @@ const dishes = ref([
         <div class="col-span-2">
             <h2 class="font-serif font-medium text-5xl text-center leading-loose mb-8">Dinner</h2>
             <p class="mb-4">
-                Dinner will be served as a set menu of the following courses.
+                Dinner will be served family-style as a set menu of the following courses.
             </p>
             <p>
                 For our friends and family with dietary restrictions, please let us know on your RSVP and we will coordinate alternative dishes.
