@@ -48,7 +48,7 @@ onMounted(() => {
         <div
             class="fixed top-0 left-0 h-18 w-full bg-white px-20 box-border text-right font-serif italic text-3xl z-nav leading-loose select-none">
             <NuxtLink
-                class="font-serif leading-[4.5rem] text-4xl lg:text-5xl text-black font-medium select-none inline-block absolute left-0 ml-4 lg:ml-20 not-italic"
+                class="font-serif leading-[4.5rem] lg:leading-[4.5rem] text-4xl lg:text-5xl text-black font-medium select-none inline-block absolute left-0 ml-4 lg:ml-20 not-italic"
                 to="/">
                 Na & Richard</NuxtLink>
             <div class="hidden lg:block">
